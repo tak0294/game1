@@ -1,5 +1,4 @@
-#include <SDL/SDL.h>
-#include <SDL/SDL_image.h>
+#include <SFML/Graphics.hpp>
 
 #define WINDOW_WIDTH 640
 #define WINDOW_HEIGHT 480
@@ -9,7 +8,6 @@
  * VideoSystem Class.
  ***************************************************************************************/
 class VideoSystem {
-	SDL_Surface *screen;
 	int m_width;
 	int m_height;
 	int m_bpp;
@@ -26,17 +24,14 @@ void VideoSystem::initialize(int w, int h, int bpp) {
 	this->m_width = w;
 	this->m_height = h;
 	this->m_bpp = bpp;
-	SDL_Init(SDL_INIT_EVERYTHING);
-	SDL_EnableKeyRepeat(1,1000/60);
-	SDL_SetVideoMode(w, h, bpp, SDL_HWSURFACE | SDL_DOUBLEBUF);	
+    sf::RenderWindow window(sf::VideoMode(w, h), "SFML works!");
 }
-
 
 /**
  * フルスクリーン切り替え.
  */
 void VideoSystem::toggleFullScreen() {
-	SDL_WM_ToggleFullScreen(SDL_GetVideoSurface());
+	//SDL_WM_ToggleFullScreen(SDL_GetVideoSurface());
 }
 
 
@@ -46,7 +41,8 @@ void VideoSystem::toggleFullScreen() {
  ***************************************************************************************/
 class InputSystem {
 private:
-	SDL_Event event;
+	sf::Event event;
+	sf::RenderWindow window;
 public:
 	bool isLeft;
 	bool isRight;
@@ -71,23 +67,24 @@ void InputSystem::initialize() {
 }
 
 void InputSystem::updateKeyState() {
-	if(SDL_PollEvent(&this->event)){
+
+	if(window.pollEvent(this->event)){
 		switch(this->event.type){
-			case SDL_KEYDOWN:
-				switch(event.key.keysym.sym){
-					case SDLK_UP:
+			case sf::Event::KeyPressed:
+				switch(this->event.key.code){
+					case sf::Keyboard::Up:
 						this->isUp = true;
 						break;
-					case SDLK_DOWN:
+					case sf::Keyboard::Down:
 						this->isDown = true;
 						break;
-					case SDLK_RIGHT:
+					case sf::Keyboard::Right:
 						this->isRight = true;
 						break;
-					case SDLK_LEFT:
+					case sf::Keyboard::Left:
 						this->isLeft = true;
 						break;
-					case SDLK_ESCAPE:
+					case sf::Keyboard::Escape:
 						this->isESC = true;
 						break;
 					default:
@@ -96,28 +93,28 @@ void InputSystem::updateKeyState() {
 				}
 			break;
 
-			case SDL_KEYUP:
-				switch(event.key.keysym.sym){
-					case SDLK_UP:
+			case sf::Event::KeyReleased:
+				switch(this->event.key.code){
+					case sf::Keyboard::Up:
 						this->isUp = false;
 						break;
-					case SDLK_DOWN:
+					case sf::Keyboard::Down:
 						this->isDown = false;
 						break;
-					case SDLK_RIGHT:
+					case sf::Keyboard::Right:
 						this->isRight = false;
 						break;
-					case SDLK_LEFT:
+					case sf::Keyboard::Left:
 						this->isLeft = false;
 						break;
-					case SDLK_ESCAPE:
+					case sf::Keyboard::Escape:
 						this->isESC = false;
 						break;
 					default:
 						break;
 
 				}
-
+			break;
 		}
 	}
 }
@@ -165,26 +162,24 @@ VideoSystem* GameManager::getDisplay() {
 void GameManager::start() {
 	int exit_prg = 0;
 
-	/* イベントループ */
-	while(exit_prg == 0){
-		this->m_input->updateKeyState();
+	// Start the game loop
+    while (window.isOpen())
+    {
+    	this->m_input->updateKeyState();
+    	if(this->m_input->isESC) {
+    		window.close();
+    	}
 
-		if(this->m_input->isESC == true) {
-			exit_prg = 1;
-		}
-
-		if(this->m_currentScene != NULL) {
-			this->m_currentScene->update();
-			this->m_currentScene->draw();
-		}
-
-		SDL_Delay(1000/60);
-	}
+        // Clear screen
+        window.clear();
+        // Update the window
+        window.display();
+    }
 }
 
 void GameManager::quit() {
 	//SDL_FreeSurface(image);
-	SDL_Quit();
+	//SDL_Quit();
 }
 
 GameManager *gameManager;
@@ -218,55 +213,14 @@ void TestScene::update() {
 
 
 
-SDL_Surface* image;
-SDL_Rect rect, scr_rect, rect_tmp;
-
-int draw(SDL_Surface *image, SDL_Rect *rect1, SDL_Rect *rect2);
-
 int main(int argc, char* argv[]){
 
 	gameManager = new GameManager(WINDOW_WIDTH, WINDOW_HEIGHT, BPP);
+//	TestScene *s = new TestScene();
+//	gameManager->setScene(s);
+
 	gameManager->start();
 	
-	TestScene *s = new TestScene();
-	gameManager->setScene(s);
-
-	/* 画像読み込み */
-	image = IMG_Load("pumpkin064.png");
-
-	/* 画像の矩形情報設定 */
-	rect.x = 0;
-	rect.y = 0;
-	rect.w = image->w;
-	rect.h = image->h;
-
-	/* 画像配置位置情報の設定 */
-	scr_rect.x = 0;
-	scr_rect.y = 0;
-
-	/* 描画 */
-	draw(image, &rect, &scr_rect);
-
-	rect_tmp = scr_rect;
-
-
-	return 0;
-}
-
-int draw(SDL_Surface *image, SDL_Rect *rect1, SDL_Rect *rect2){
-	SDL_Rect window_rect = {0, 0, WINDOW_WIDTH, WINDOW_HEIGHT};
-	SDL_Surface *video_surface;
-	
-	video_surface = SDL_GetVideoSurface();
-
-	/* 背景色塗りつぶし */
-	SDL_FillRect(video_surface, &window_rect, SDL_MapRGB(video_surface->format, 0, 0, 0));
-
-	/* サーフェスの複写 */
-	SDL_BlitSurface(image, rect1, video_surface, rect2);
-
-	/* サーフェスフリップ */
-	SDL_Flip(video_surface);
 
 	return 0;
 }
