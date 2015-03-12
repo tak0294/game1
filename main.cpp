@@ -15,6 +15,7 @@ class VideoSystem {
 public:
 	void initialize(int, int, int);
 	void toggleFullScreen();
+	sf::RenderWindow &window;
 };
 
 /**
