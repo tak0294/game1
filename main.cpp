@@ -42,50 +42,62 @@ void VideoSystem::toggleFullScreen() {
  ***************************************************************************************/
 class InputSystem {
 private:
-	sf::Event event;
+	static sf::Event event;
 public:
-	bool isLeft;
-	bool isRight;
-	bool isUp;
-	bool isDown;
-	bool isA;
-	bool isB;
-	bool isESC;
+	static bool isLeft;
+	static bool isRight;
+	static bool isUp;
+	static bool isDown;
+	static bool isA;
+	static bool isB;
+	static bool isESC;
 
-	void updateKeyState(sf::RenderWindow &window);
-	void initialize();
+	static void updateKeyState(sf::RenderWindow &window);
+	static void initialize();
 };
 
+/**
+ * Declare real symbols.
+ */
+bool InputSystem::isLeft;
+bool InputSystem::isRight;
+bool InputSystem::isUp;
+bool InputSystem::isDown;
+bool InputSystem::isA;
+bool InputSystem::isB;
+bool InputSystem::isESC;
+sf::Event InputSystem::event;
+
 void InputSystem::initialize() {
-	this->isLeft = false;
-	this->isRight = false;
-	this->isUp = false;
-	this->isDown = false;
-	this->isA = false;
-	this->isB = false;
-	this->isESC = false;
+	InputSystem::isLeft = false;
+	InputSystem::isRight = false;
+	InputSystem::isUp = false;
+	InputSystem::isDown = false;
+	InputSystem::isA = false;
+	InputSystem::isB = false;
+	InputSystem::isESC = false;
 }
 
 void InputSystem::updateKeyState(sf::RenderWindow &window) {
 
-	if(window.pollEvent(this->event)){
-		switch(this->event.type){
+	if(window.pollEvent(InputSystem::event)){
+		switch(InputSystem::event.type){
 			case sf::Event::KeyPressed:
-				switch(this->event.key.code){
+				switch(InputSystem::event.key.code){
 					case sf::Keyboard::Up:
-						this->isUp = true;
+						InputSystem::isUp = true;
 						break;
 					case sf::Keyboard::Down:
-						this->isDown = true;
+						InputSystem::isDown = true;
 						break;
 					case sf::Keyboard::Right:
-						this->isRight = true;
+						InputSystem::isRight = true;
 						break;
 					case sf::Keyboard::Left:
-						this->isLeft = true;
+						InputSystem::isLeft = true;
 						break;
 					case sf::Keyboard::Escape:
-						this->isESC = true;
+						InputSystem::isESC = true;
 						break;
 					default:
 						break;
@@ -94,21 +106,21 @@ void InputSystem::updateKeyState(sf::RenderWindow &window) {
 			break;
 
 			case sf::Event::KeyReleased:
-				switch(this->event.key.code){
+				switch(InputSystem::event.key.code){
 					case sf::Keyboard::Up:
-						this->isUp = false;
+						InputSystem::isUp = false;
 						break;
 					case sf::Keyboard::Down:
-						this->isDown = false;
+						InputSystem::isDown = false;
 						break;
 					case sf::Keyboard::Right:
-						this->isRight = false;
+						InputSystem::isRight = false;
 						break;
 					case sf::Keyboard::Left:
-						this->isLeft = false;
+						InputSystem::isLeft = false;
 						break;
 					case sf::Keyboard::Escape:
-						this->isESC = false;
+						InputSystem::isESC = false;
 						break;
 					default:
 						break;
@@ -150,8 +162,7 @@ public:
 GameManager::GameManager(int screen_w, int screen_h, int screen_bpp) {
 	this->m_video = new VideoSystem();
 	this->m_video->initialize(screen_w, screen_h, screen_bpp);
-	this->m_input = new InputSystem();
-	this->m_input->initialize();
+	InputSystem::initialize();
 	this->m_currentScene = NULL;
 }
 
@@ -165,8 +176,8 @@ void GameManager::start() {
 	// Start the game loop
     while (this->m_video->window.isOpen())
     {
-    	this->m_input->updateKeyState(this->m_video->window);
-    	if(this->m_input->isESC) {
+    	InputSystem::updateKeyState(this->m_video->window);
+    	if(InputSystem::isESC) {
     		this->m_video->window.close();
     	}
 
@@ -198,6 +209,8 @@ void GameManager::setScene(Scene *scene) {
  * TestScene Class.
  ***************************************************************************************/
 class TestScene : public Scene {
+	float x = .0f;
+	float y = .0f;
 public:
 	void setup();
 	void draw(sf::RenderWindow &window);
@@ -209,13 +222,16 @@ void TestScene::setup() {
 }
 
 void TestScene::draw(sf::RenderWindow &window) {
-	sf::CircleShape shape(100.f);
+	sf::CircleShape shape(50.f);
     shape.setFillColor(sf::Color::Green);
+    shape.setPosition(this->x, this->y);
     window.draw(shape);
 }
 
 void TestScene::update() {
-
+	if(InputSystem::isRight) {
+		this->x += 0.02f;
+	}
 }
 
 
