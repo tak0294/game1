@@ -15,7 +15,7 @@ class VideoSystem {
 public:
 	void initialize(int, int, int);
 	void toggleFullScreen();
-	sf::RenderWindow &window;
+	sf::RenderWindow window;
 };
 
 /**
@@ -25,7 +25,7 @@ void VideoSystem::initialize(int w, int h, int bpp) {
 	this->m_width = w;
 	this->m_height = h;
 	this->m_bpp = bpp;
-    sf::RenderWindow window(sf::VideoMode(w, h), "SFML works!");
+    this->window.create(sf::VideoMode(w, h), "SFML works!!!");
 }
 
 /**
@@ -43,7 +43,6 @@ void VideoSystem::toggleFullScreen() {
 class InputSystem {
 private:
 	sf::Event event;
-	sf::RenderWindow window;
 public:
 	bool isLeft;
 	bool isRight;
@@ -53,7 +52,7 @@ public:
 	bool isB;
 	bool isESC;
 
-	void updateKeyState();
+	void updateKeyState(sf::RenderWindow &window);
 	void initialize();
 };
 
@@ -67,7 +66,7 @@ void InputSystem::initialize() {
 	this->isESC = false;
 }
 
-void InputSystem::updateKeyState() {
+void InputSystem::updateKeyState(sf::RenderWindow &window) {
 
 	if(window.pollEvent(this->event)){
 		switch(this->event.type){
@@ -127,7 +126,7 @@ void InputSystem::updateKeyState() {
 class Scene {
 public:
 	virtual void setup() = 0;
-	virtual void draw() = 0;
+	virtual void draw(sf::RenderWindow &window) = 0;
 	virtual void update() = 0;
 };
 
@@ -164,17 +163,20 @@ void GameManager::start() {
 	int exit_prg = 0;
 
 	// Start the game loop
-    while (window.isOpen())
+    while (this->m_video->window.isOpen())
     {
-    	this->m_input->updateKeyState();
+    	this->m_input->updateKeyState(this->m_video->window);
     	if(this->m_input->isESC) {
-    		window.close();
+    		this->m_video->window.close();
     	}
 
         // Clear screen
-        window.clear();
+        this->m_video->window.clear();
+        // Draw current scene.
+        this->m_currentScene->update();
+        this->m_currentScene->draw(this->m_video->window);
         // Update the window
-        window.display();
+        this->m_video->window.display();
     }
 }
 
@@ -192,10 +194,13 @@ void GameManager::setScene(Scene *scene) {
 
 
 
-class TestScene : Scene {
+/***************************************************************************************
+ * TestScene Class.
+ ***************************************************************************************/
+class TestScene : public Scene {
 public:
 	void setup();
-	void draw();
+	void draw(sf::RenderWindow &window);
 	void update();
 };
 
@@ -203,8 +208,10 @@ void TestScene::setup() {
 
 }
 
-void TestScene::draw() {
-
+void TestScene::draw(sf::RenderWindow &window) {
+	sf::CircleShape shape(100.f);
+    shape.setFillColor(sf::Color::Green);
+    window.draw(shape);
 }
 
 void TestScene::update() {
@@ -214,11 +221,14 @@ void TestScene::update() {
 
 
 
+/***************************************************************************************
+ * Main Func.
+ ***************************************************************************************/
 int main(int argc, char* argv[]){
 
 	gameManager = new GameManager(WINDOW_WIDTH, WINDOW_HEIGHT, BPP);
-//	TestScene *s = new TestScene();
-//	gameManager->setScene(s);
+	TestScene *s = new TestScene();
+	gameManager->setScene(s);
 
 	gameManager->start();
 	
