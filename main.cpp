@@ -1,4 +1,5 @@
 #include <SFML/Graphics.hpp>
+#include <iostream>
 
 #define WINDOW_WIDTH 640
 #define WINDOW_HEIGHT 480
@@ -171,23 +172,24 @@ VideoSystem* GameManager::getDisplay() {
 }
 
 void GameManager::start() {
-	int exit_prg = 0;
+
+	sf::RenderWindow &window = (this->m_video->window);
 
 	// Start the game loop
-    while (this->m_video->window.isOpen())
+    while (window.isOpen())
     {
     	InputSystem::updateKeyState(this->m_video->window);
     	if(InputSystem::isESC) {
-    		this->m_video->window.close();
+    		window.close();
     	}
 
         // Clear screen
-        this->m_video->window.clear();
+        window.clear();
         // Draw current scene.
         this->m_currentScene->update();
-        this->m_currentScene->draw(this->m_video->window);
+        this->m_currentScene->draw(window);
         // Update the window
-        this->m_video->window.display();
+        window.display();
     }
 }
 
@@ -209,8 +211,9 @@ void GameManager::setScene(Scene *scene) {
  * TestScene Class.
  ***************************************************************************************/
 class TestScene : public Scene {
-	float x = .0f;
-	float y = .0f;
+	float x;
+	float y;
+	sf::CircleShape shape;
 public:
 	void setup();
 	void draw(sf::RenderWindow &window);
@@ -218,19 +221,20 @@ public:
 };
 
 void TestScene::setup() {
+	this->x = .0f;
+	this->y = .0f;
+	this->shape.setRadius(10.0f);
 
 }
 
 void TestScene::draw(sf::RenderWindow &window) {
-	sf::CircleShape shape(50.f);
-    shape.setFillColor(sf::Color::Green);
-    shape.setPosition(this->x, this->y);
+	shape.setPosition(this->x, this->y);
     window.draw(shape);
 }
 
 void TestScene::update() {
 	if(InputSystem::isRight) {
-		this->x += 0.02f;
+		this->x += 1.0f;
 	}
 }
 
@@ -244,10 +248,10 @@ int main(int argc, char* argv[]){
 
 	gameManager = new GameManager(WINDOW_WIDTH, WINDOW_HEIGHT, BPP);
 	TestScene *s = new TestScene();
+	s->setup();
 	gameManager->setScene(s);
-
 	gameManager->start();
-	
+		
 
 	return 0;
 }
