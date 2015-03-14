@@ -174,7 +174,7 @@ VideoSystem* GameManager::getDisplay() {
 void GameManager::start() {
 
 	sf::RenderWindow &window = (this->m_video->window);
-
+	
 	// Start the game loop
     while (window.isOpen())
     {
