@@ -3,8 +3,8 @@
 #include <string>
 #include <sstream>
 #include <math.h>
-#include "GameManager.h"
-#include "Scene.h"
+#include "library/GameManager.h"
+#include "library/Scene.h"
 
 #define WINDOW_WIDTH 800
 #define WINDOW_HEIGHT 600

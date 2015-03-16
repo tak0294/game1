@@ -1,4 +1,4 @@
-#include "InputSystem.h"
+#include "library/InputSystem.h"
 
 /**
  * Declare real symbols.

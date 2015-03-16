@@ -1,4 +1,4 @@
-#include "VideoSystem.h"
+#include "library/VideoSystem.h"
 
 /**
  *	SDL初期化.

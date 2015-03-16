@@ -2,9 +2,9 @@
 #define GAME_MANAGER_H
 
 #include <SFML/Graphics.hpp>
-#include "VideoSystem.h"
-#include "InputSystem.h"
-#include "Scene.h"
+#include "library/VideoSystem.h"
+#include "library/InputSystem.h"
+#include "library/Scene.h"
 
 /***************************************************************************************
  * GameManager Class.

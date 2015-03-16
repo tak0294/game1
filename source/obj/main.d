@@ -1,12 +1,11 @@
-obj/main.o: main.cpp ../include/GameManager.h ../include/VideoSystem.h \
- ../include/InputSystem.h ../include/Scene.h ../include/Scene.h
+obj/main.o: main.cpp ../include/library/GameManager.h \
+ ../include/library/VideoSystem.h ../include/library/InputSystem.h \
+ ../include/library/Scene.h
 
-../include/GameManager.h:
+../include/library/GameManager.h:
 
-../include/VideoSystem.h:
+../include/library/VideoSystem.h:
 
-../include/InputSystem.h:
+../include/library/InputSystem.h:
 
-../include/Scene.h:
-
-../include/Scene.h:
+../include/library/Scene.h:
