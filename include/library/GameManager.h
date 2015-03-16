@@ -15,7 +15,7 @@ class GameManager {
 
 	Scene *m_currentScene;
 public:
-	GameManager(int, int, int);
+	GameManager(int, int);
 	VideoSystem* getDisplay();
 	void setScene(Scene *scene);
 	void start();

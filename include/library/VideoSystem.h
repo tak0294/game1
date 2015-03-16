@@ -8,11 +8,9 @@
 class VideoSystem {
 	int m_width;
 	int m_height;
-	int m_bpp;
-
 
 public:
-	void initialize(int, int, int);
+	void initialize(int, int);
 	void toggleFullScreen();
 	sf::RenderWindow window;
 };

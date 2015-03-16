@@ -8,7 +8,6 @@
 
 #define WINDOW_WIDTH 800
 #define WINDOW_HEIGHT 600
-#define BPP 16
 
 
 GameManager *gameManager;
@@ -85,7 +84,7 @@ void TestScene::update() {
  ***************************************************************************************/
 int main(int argc, char* argv[]){
 
-	gameManager = new GameManager(WINDOW_WIDTH, WINDOW_HEIGHT, BPP);
+	gameManager = new GameManager(WINDOW_WIDTH, WINDOW_HEIGHT);
 	TestScene *s = new TestScene();
 	s->setup();
 	gameManager->setScene(s);

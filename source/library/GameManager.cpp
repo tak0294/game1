@@ -1,8 +1,8 @@
 #include "library/GameManager.h"
 
-GameManager::GameManager(int screen_w, int screen_h, int screen_bpp) {
+GameManager::GameManager(int screen_w, int screen_h) {
 	this->m_video = new VideoSystem();
-	this->m_video->initialize(screen_w, screen_h, screen_bpp);
+	this->m_video->initialize(screen_w, screen_h);
 	InputSystem::initialize();
 	this->m_currentScene = NULL;
 }

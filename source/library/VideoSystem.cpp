@@ -3,10 +3,9 @@
 /**
  *	SDL初期化.
  */
-void VideoSystem::initialize(int w, int h, int bpp) {
+void VideoSystem::initialize(int w, int h) {
 	this->m_width = w;
 	this->m_height = h;
-	this->m_bpp = bpp;
     this->window.create(sf::VideoMode(w, h), "SFML works!!!");
     this->window.setVerticalSyncEnabled(true);
     this->window.setFramerateLimit(60);
