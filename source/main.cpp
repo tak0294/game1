@@ -5,30 +5,33 @@
 #include <math.h>
 #include "library/GameManager.h"
 #include "library/Scene.h"
+#include "library/Mover.h"
 
 #define WINDOW_WIDTH 800
 #define WINDOW_HEIGHT 600
 
-
 GameManager *gameManager;
+
+/***************************************************************************************
+ * TestPumpkin Class.
+ ***************************************************************************************/
+class TestPumpkin : public Mover {
+
+public:
+	void update();
+	sf::Vector2f dst_scale;
+};
+
+void TestPumpkin::update() {
+	this->rotation += 2.0f;
+} 
 
 
 /***************************************************************************************
  * TestScene Class.
  ***************************************************************************************/
 class TestScene : public Scene {
-	float x;
-	float y;
-	int frame;
-	sf::CircleShape shape;
-	sf::Texture texture;
-	sf::Sprite sprite;
-
-	sf::Font font;
-	sf::Text text;
-
-	sf::Clock clock;
-	float lastTime;
+	TestPumpkin *mover2;
 public:
 	void setup();
 	void draw(sf::RenderWindow &window);
@@ -36,43 +39,32 @@ public:
 };
 
 void TestScene::setup() {
-	this->frame = 0;
-	this->x = .0f;
-	this->y = 200.0f;
-	this->shape.setRadius(10.0f);
-	this->texture.loadFromFile("pumpkin064.png");
-	this->sprite.setTexture(this->texture);
-	this->font.loadFromFile("yutapon.ttf");
-	this->text.setFont(font);
-	this->text.setString("10.00");
-	this->lastTime = 0;
+	Scene::setup();
+
+	mover2 = new TestPumpkin();
+	mover2->setTexture("pumpkin064.png");
+	mover2->pos.y = 250;
 }
 
 void TestScene::draw(sf::RenderWindow &window) {
-	sprite.setPosition(this->x, this->y);
-	sprite.setOrigin(32, 32);
-	sprite.setRotation(frame);
-	window.draw(sprite);
-	std::stringstream ss;
-	float currentTIme = clock.restart().asSeconds();
-	float fps = floor(1.f / (currentTIme));
-	lastTime = currentTIme;
+	this->mover2->draw(window);
 
-    ss << fps;
-    text.setString(ss.str());
-
-    window.draw(text);
 }
 
 void TestScene::update() {
 	if(InputSystem::isRight) {
-		this->x += 2.0f;
+		mover2->pos.x += 2.0f;
 	}
 
 	if(InputSystem::isLeft) {
-		this->x -= 4.0f;
+		mover2->pos.x -= 4.0f;
 	}
 
+	if(InputSystem::isA) {
+		mover2->scale.x = mover2->scale.y = 10;
+	}
+
+	mover2->update();
 	frame++;
 }
 
@@ -89,7 +81,6 @@ int main(int argc, char* argv[]){
 	s->setup();
 	gameManager->setScene(s);
 	gameManager->start();
-		
 
 	return 0;
 }

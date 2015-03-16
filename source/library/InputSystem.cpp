@@ -43,6 +43,12 @@ void InputSystem::updateKeyState(sf::RenderWindow &window) {
 					case sf::Keyboard::Escape:
 						InputSystem::isESC = true;
 						break;
+					case sf::Keyboard::Z:
+						InputSystem::isA = true;
+						break;
+					case sf::Keyboard::X:
+						InputSystem::isB = true;
+						break;
 					default:
 						break;
 
@@ -65,6 +71,12 @@ void InputSystem::updateKeyState(sf::RenderWindow &window) {
 						break;
 					case sf::Keyboard::Escape:
 						InputSystem::isESC = false;
+						break;
+					case sf::Keyboard::Z:
+						InputSystem::isA = false;
+						break;
+					case sf::Keyboard::X:
+						InputSystem::isB = false;
 						break;
 					default:
 						break;

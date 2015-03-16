@@ -7,7 +7,10 @@
  ***************************************************************************************/
 class Scene {
 public:
-	virtual void setup() = 0;
+	int frame;
+	void setup(){
+		frame = 0;
+	};
 	virtual void draw(sf::RenderWindow &window) = 0;
 	virtual void update() = 0;
 };
