@@ -9,7 +9,7 @@ void VideoSystem::initialize(int w, int h) {
     this->window.create(sf::VideoMode(w, h), "SFML works!!!");
     this->window.setVerticalSyncEnabled(true);
     this->window.setFramerateLimit(60);
-    this->bgTexture.create(w, h);
+    //this->bgTexture.create(w, h);
 }
 
 /**
@@ -23,9 +23,7 @@ void VideoSystem::toggleFullScreen() {
  * 背景.
  */
 void VideoSystem::tiledBackgroundFromFile(std::string image_filename) {
-	//sf::Texture t;
-	// t.loadFromFile(image_filename);
-	// sf::Sprite s(t);
-	// this->bgTexture.draw(s);
-	// this->bgTexture.display();
+	this->backgroundTexture.loadFromFile(image_filename);
+	//this->m_textureSize = this->m_texture.getSize();
+	this->backgroundSprite.setTexture(this->backgroundTexture);
 }

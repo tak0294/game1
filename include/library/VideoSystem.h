@@ -15,7 +15,8 @@ public:
 	void toggleFullScreen();
 	void tiledBackgroundFromFile(std::string image_filename);
 	sf::RenderWindow window;
-	sf::RenderTexture bgTexture;
+	sf::Sprite backgroundSprite;
+	sf::Texture backgroundTexture;
 };
 
 #endif
