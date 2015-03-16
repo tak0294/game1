@@ -40,7 +40,7 @@ void GameManager::start() {
         // process end time & fix fps
         endTime = clock.getElapsedTime().asSeconds();
         float passTime = endTime - startTime;
-        (1000 / 60 > passTime)?sf::sleep(sf::seconds((1000/60 - passTime) / 1000)):sf::sleep(sf::seconds(0));
+        //(1000 / 60 > passTime)?sf::sleep(sf::seconds((1000/60 - passTime) / 1000)):sf::sleep(sf::seconds(0));
     }
 }
 
