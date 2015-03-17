@@ -1,19 +1,14 @@
 #include "library/GameManager.h"
 
 GameManager::GameManager(int screen_w, int screen_h) {
-	this->m_video = new VideoSystem();
-	this->m_video->initialize(screen_w, screen_h);
+	VideoSystem::initialize(screen_w, screen_h);
 	InputSystem::initialize();
 	this->m_currentScene = NULL;
 }
 
-VideoSystem* GameManager::getDisplay() {
-	return this->m_video;
-}
-
 void GameManager::start() {
 
-	sf::RenderWindow &window = (this->m_video->window);
+	sf::RenderWindow &window = (VideoSystem::window);
     sf::Clock clock;
     float startTime;
     float endTime;
@@ -21,7 +16,7 @@ void GameManager::start() {
 	// Start the game loop
     while (window.isOpen())
     {
-    	InputSystem::updateKeyState(this->m_video->window);
+    	InputSystem::updateKeyState(window);
     	if(InputSystem::isESC) {
     		window.close();
     	}
@@ -31,6 +26,9 @@ void GameManager::start() {
 
         // Clear screen
         window.clear();
+        // Draw background.
+        VideoSystem::drawBackground(window);
+        VideoSystem::scrollBackground();
         // Draw current scene.
         this->m_currentScene->update();
         this->m_currentScene->draw(window);

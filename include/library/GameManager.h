@@ -10,13 +10,9 @@
  * GameManager Class.
  ***************************************************************************************/
 class GameManager {
-	VideoSystem *m_video;
-	InputSystem *m_input;
-
 	Scene *m_currentScene;
 public:
 	GameManager(int, int);
-	VideoSystem* getDisplay();
 	void setScene(Scene *scene);
 	void start();
 	void quit();

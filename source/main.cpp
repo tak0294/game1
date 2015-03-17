@@ -40,7 +40,8 @@ public:
 
 void TestScene::setup() {
 	Scene::setup();
-
+	VideoSystem::tiledBackgroundFromFile("pumpkin064.png");
+	VideoSystem::bgScrollSpeed = 1;
 	mover2 = new TestPumpkin();
 	mover2->setTexture("pumpkin064.png");
 	mover2->pos.y = 250;
@@ -62,6 +63,7 @@ void TestScene::update() {
 
 	if(InputSystem::isA) {
 		mover2->scale.x = mover2->scale.y = 10;
+		VideoSystem::clearBackground();
 	}
 
 	mover2->update();

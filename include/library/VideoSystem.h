@@ -7,16 +7,24 @@
  * VideoSystem Class.
  ***************************************************************************************/
 class VideoSystem {
-	int m_width;
-	int m_height;
+	static int m_width;
+	static int m_height;
+	static sf::Vector2u m_bgSize;
+	static sf::Vector2i m_bgPos;
 
 public:
-	void initialize(int, int);
-	void toggleFullScreen();
-	void tiledBackgroundFromFile(std::string image_filename);
-	sf::RenderWindow window;
-	sf::Sprite backgroundSprite;
-	sf::Texture backgroundTexture;
+	static void initialize(int, int);
+	static void toggleFullScreen();
+	static void tiledBackgroundFromFile(std::string image_filename);
+	static void drawBackground(sf::RenderWindow &window);
+	static void clearBackground();
+	static void scrollBackground();
+	static sf::RenderWindow window;
+	static sf::RenderTexture bgRenderTexture;
+	static sf::Sprite backgroundSprite;
+	static sf::Texture backgroundTexture;
+
+	static int bgScrollSpeed;
 };
 
 #endif
