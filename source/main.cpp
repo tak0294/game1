@@ -7,8 +7,8 @@
 #include "library/Scene.h"
 #include "library/Mover.h"
 
-#define WINDOW_WIDTH 800
-#define WINDOW_HEIGHT 600
+#define WINDOW_WIDTH 640
+#define WINDOW_HEIGHT 480
 
 GameManager *gameManager;
 
@@ -40,11 +40,17 @@ public:
 
 void TestScene::setup() {
 	Scene::setup();
-	VideoSystem::tiledBackgroundFromFile("pumpkin064.png");
-	VideoSystem::bgScrollSpeed = 1;
+
+	Video::tiledBgFromFile(Video::BG_2, "pumpkin064.png");
+	Video::setBgScrollDirection(Video::BG_2, Video::DIRECTION_LEFT_DOWN);
+	Video::setBgScrollSpeed(Video::BG_2, 2);
+
+	Video::tiledBgFromFile(Video::BG_1, "panel.png");
+	
 	mover2 = new TestPumpkin();
 	mover2->setTexture("pumpkin064.png");
 	mover2->pos.y = 250;
+	mover2->scale.x = mover2->scale.y = 1.5f;
 }
 
 void TestScene::draw(sf::RenderWindow &window) {
@@ -62,8 +68,8 @@ void TestScene::update() {
 	}
 
 	if(InputSystem::isA) {
-		mover2->scale.x = mover2->scale.y = 10;
-		VideoSystem::clearBackground();
+		mover2->scale.x = mover2->scale.y = 7;
+		Video::clearBg(Video::BG_1);
 	}
 
 	mover2->update();

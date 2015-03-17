@@ -1,14 +1,14 @@
 #include "library/GameManager.h"
 
 GameManager::GameManager(int screen_w, int screen_h) {
-	VideoSystem::initialize(screen_w, screen_h);
+	Video::initialize(screen_w, screen_h);
 	InputSystem::initialize();
 	this->m_currentScene = NULL;
 }
 
 void GameManager::start() {
 
-	sf::RenderWindow &window = (VideoSystem::window);
+	sf::RenderWindow &window = (Video::window);
     sf::Clock clock;
     float startTime;
     float endTime;
@@ -27,8 +27,8 @@ void GameManager::start() {
         // Clear screen
         window.clear();
         // Draw background.
-        VideoSystem::drawBackground(window);
-        VideoSystem::scrollBackground();
+        Video::drawBg(window);
+        Video::scrollBg();
         // Draw current scene.
         this->m_currentScene->update();
         this->m_currentScene->draw(window);

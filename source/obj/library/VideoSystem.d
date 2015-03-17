@@ -1,4 +1,4 @@
-obj/library/VideoSystem.o: library/VideoSystem.cpp \
- ../include/library/VideoSystem.h
+obj/library/Video.o: library/Video.cpp \
+ ../include/library/Video.h
 
-../include/library/VideoSystem.h:
+../include/library/Video.h:
