@@ -41,11 +41,12 @@ public:
 void TestScene::setup() {
 	Scene::setup();
 
-	Video::tiledBgFromFile(Video::BG_2, "pumpkin064.png");
+	//Video::tiledBgFromFile(Video::BG_2, "dirt2q.jpg");
+	Video::bgFromFile(Video::BG_2, "flame.png", -240, -140);
 	// Video::setBgScrollDirection(Video::BG_2, Video::DIRECTION_LEFT_DOWN);
 	// Video::setBgScrollSpeed(Video::BG_2, 2);
 
-	Video::tiledBgFromFile(Video::BG_1, "panel.png");
+	Video::tiledBgFromFile(Video::BG_1, "city.png", Video::BG_TILED_HORIZONTAL, 500);
 	
 	mover2 = new TestPumpkin();
 	mover2->setTexture("pumpkin064.png");

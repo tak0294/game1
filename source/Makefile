@@ -8,7 +8,7 @@ OBJDIR   = ./obj
 ifeq "$(strip $(OBJDIR))" ""
   OBJDIR = .
 endif
-SOURCES  = $(wildcard *.cpp) $(wildcard */*.cpp)
+SOURCES  = $(wildcard *.cpp) $(wildcard */*.cpp) $(wildcard */*/*.cpp)
 OBJECTS  = $(addprefix $(OBJDIR)/, $(SOURCES:.cpp=.o))
 DEPENDS  = $(OBJECTS:.o=.d)
 
