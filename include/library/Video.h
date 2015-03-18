@@ -38,7 +38,8 @@ private:
 	static ScrollDirection m_scrollDirections[BG_LAYER_NUM];
 	static sf::RenderTexture m_bgLayers[BG_LAYER_NUM];
 	static int m_bgScrollSpeeds[BG_LAYER_NUM];
-
+	static sf::Shader m_bgShader[BG_LAYER_NUM];
+	static sf::Clock m_clock;
 
 /**
  * public member.

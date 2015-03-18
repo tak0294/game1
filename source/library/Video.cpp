@@ -9,6 +9,8 @@ sf::Vector2u Video::m_bgSizes[BG_LAYER_NUM];
 sf::Vector2i Video::m_bgPositions[BG_LAYER_NUM];
 Video::ScrollDirection Video::m_scrollDirections[BG_LAYER_NUM];
 sf::RenderTexture Video::m_bgLayers[BG_LAYER_NUM];
+sf::Shader Video::m_bgShader[BG_LAYER_NUM];
+sf::Clock Video::m_clock;
 
 sf::RenderWindow Video::window;
 int Video::m_bgScrollSpeeds[BG_LAYER_NUM];
@@ -25,8 +27,12 @@ void Video::initialize(int w, int h) {
 
     for(int ii=0;ii<BG_LAYER_NUM;ii++) {
     	m_scrollDirections[ii] = DIRECTION_NONE;
-    	m_bgScrollSpeeds[ii]    = 0;
+    	m_bgScrollSpeeds[ii]   = 0;
     }
+
+    // m_bgShader[0].loadFromFile("shader/pixelate.frag", sf::Shader::Fragment);
+    // m_bgShader[0].loadFromFile("shader/wave.vert", sf::Shader::Vertex);
+    m_bgShader[0].loadFromFile("shader/wave.vert", "shader/pixelate.frag");
 }
 
 /**
@@ -118,8 +124,15 @@ void Video::drawBg(sf::RenderWindow &window) {
 	for(int layer=0;layer<BG_LAYER_NUM;layer++) {
 		sf::Sprite sprite(Video::m_bgLayers[layer].getTexture());
 		sprite.setPosition((float)m_bgPositions[layer].x, (float)m_bgPositions[layer].y);
-		//sprite.setColor(sf::Color(255,255,255,200));
-	    window.draw(sprite);
+		//fragment
+		m_bgShader[0].setParameter("texture", sf::Shader::CurrentTexture);
+		m_bgShader[0].setParameter("pixel_threshold", 0.0005);
+		//vertex
+		m_bgShader[0].setParameter("wave_phase", m_clock.getElapsedTime().asSeconds());
+        m_bgShader[0].setParameter("wave_amplitude", 1 * 200, 0 * 40);
+        m_bgShader[0].setParameter("wave_height", (float)m_bgLayers[layer].getTexture().getSize().y);
+		//printf("%f\n", (float)m_bgLayers[layer].getTexture().getSize().y);
+	    window.draw(sprite, &m_bgShader[0]);
 	}
 }
 

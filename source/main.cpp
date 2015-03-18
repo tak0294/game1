@@ -42,8 +42,8 @@ void TestScene::setup() {
 	Scene::setup();
 
 	Video::tiledBgFromFile(Video::BG_2, "pumpkin064.png");
-	Video::setBgScrollDirection(Video::BG_2, Video::DIRECTION_LEFT_DOWN);
-	Video::setBgScrollSpeed(Video::BG_2, 2);
+	// Video::setBgScrollDirection(Video::BG_2, Video::DIRECTION_LEFT_DOWN);
+	// Video::setBgScrollSpeed(Video::BG_2, 2);
 
 	Video::tiledBgFromFile(Video::BG_1, "panel.png");
 	
