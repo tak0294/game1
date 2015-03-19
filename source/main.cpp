@@ -43,6 +43,8 @@ void TestScene::setup() {
 
 	//Video::tiledBgFromFile(Video::BG_2, "dirt2q.jpg");
 	Video::bgFromFile(Video::BG_2, "flame.png", -240, -140);
+	Video::addBgPixelShader(Video::BG_2, Video::PS_PIXELIZE);
+	Video::addBgPixelShader(Video::BG_2, Video::PS_RASTER);
 	// Video::setBgScrollDirection(Video::BG_2, Video::DIRECTION_LEFT_DOWN);
 	// Video::setBgScrollSpeed(Video::BG_2, 2);
 

@@ -1,9 +1,4 @@
 #include "library/Shader/ShaderScript.h"
 
-ShaderScript::ShaderScript() {
-	this->setScript();
-}
-
-void ShaderScript::setScript() {
-	
-}
+void ShaderScript::setShaderScript(){}
+void ShaderScript::setShaderParams(sf::Shader &shader){}

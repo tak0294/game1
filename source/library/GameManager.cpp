@@ -26,12 +26,15 @@ void GameManager::start() {
 
         // Clear screen
         window.clear();
+        Video::clearSpriteAll();
         // Draw background.
         Video::drawBg(window);
         Video::scrollBg();
         // Draw current scene.
         this->m_currentScene->update();
         this->m_currentScene->draw(window);
+        // Flip sprite texture to window.
+        Video::flipSpriteToWindow(window);
         // Update the window
         window.display();
 

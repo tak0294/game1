@@ -7,12 +7,11 @@
 class ShaderScript{
 
 public:
-	ShaderScript();
+	virtual void setShaderScript();
+	virtual void setShaderParams(sf::Shader &shader);
 
-protected:
 	std::string m_mainScript;
 	std::string m_headerScript;
-	void setScript();
 };
 
 #endif

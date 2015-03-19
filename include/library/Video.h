@@ -2,8 +2,11 @@
 #define VIDEO_SYSTEM_H
 #include <SFML/Graphics.hpp>
 #include <string>
+#include "library/Shader/Shader.h"
+#include "library/Shader/ShaderScript.h"
 
 const int BG_LAYER_NUM = 3;
+const int SPRITE_LAYER_NUM = 2;
 const int PIXEL_SHADER_NUM = 3;
 const int VERTEX_SHADER_NUM = 3;
 /***************************************************************************************
@@ -26,6 +29,10 @@ public:
 		BG_1 = 0, 
 		BG_2 = 1,
 		BG_3 = 2,
+	};
+	enum SpriteLayer {
+		SP_1 = 0, 
+		SP_2 = 1,
 	};
 	enum PixelShader {
 		PS_NONE = 0,
@@ -52,10 +59,11 @@ private:
 	static sf::Vector2i m_bgPositions[BG_LAYER_NUM];
 	static ScrollDirection m_scrollDirections[BG_LAYER_NUM];
 	static sf::RenderTexture m_bgLayers[BG_LAYER_NUM];
+	static sf::RenderTexture m_spriteLayers[SPRITE_LAYER_NUM];
 	static int m_bgScrollSpeeds[BG_LAYER_NUM];
-	static sf::Shader m_bgShader[BG_LAYER_NUM];
-	static sf::Clock m_clock;
-	static std::string m_pixelShaderScripts[PIXEL_SHADER_NUM];
+	static Shader* m_bgShader[BG_LAYER_NUM];
+	static Shader* m_spriteShader[SPRITE_LAYER_NUM];
+	static ShaderScript* m_pixelShaderScripts[PIXEL_SHADER_NUM];
 	static std::string m_vertexShaderScripts[VERTEX_SHADER_NUM];
 
 /**
@@ -72,11 +80,16 @@ public:
 
 	static void drawBg(sf::RenderWindow &window);
 	static void clearBg(BgLayer layer);
+	static void clearSpriteAll();
 	static void scrollBg();
 	static void setBgScrollDirection(BgLayer layer, ScrollDirection direction);
 	static void setBgScrollSpeed(BgLayer layer, int speed);
+	static void addBgPixelShader(BgLayer layer, PixelShader shaderType);
+	static void addSpritePixelShader(SpriteLayer layer, PixelShader shaderType);
+	static void drawSprite(SpriteLayer layer, sf::RenderWindow &window, sf::Sprite &sprite);
+	static void flipSpriteToWindow(sf::RenderWindow &window);
 	static sf::RenderWindow window;
-
+	static sf::Clock videoClock;
 };
 
 #endif

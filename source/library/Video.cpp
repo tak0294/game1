@@ -1,4 +1,5 @@
 #include "library/Video.h"
+#include "library/Shader/ShaderInclude.h"
 #include <stdio.h>
 /**
  * Declare real symbols.
@@ -9,8 +10,10 @@ sf::Vector2u Video::m_bgSizes[BG_LAYER_NUM];
 sf::Vector2i Video::m_bgPositions[BG_LAYER_NUM];
 Video::ScrollDirection Video::m_scrollDirections[BG_LAYER_NUM];
 sf::RenderTexture Video::m_bgLayers[BG_LAYER_NUM];
-sf::Shader Video::m_bgShader[BG_LAYER_NUM];
-sf::Clock Video::m_clock;
+sf::RenderTexture Video::m_spriteLayers[SPRITE_LAYER_NUM];
+Shader* Video::m_bgShader[BG_LAYER_NUM];
+Shader* Video::m_spriteShader[SPRITE_LAYER_NUM];
+sf::Clock Video::videoClock;
 
 sf::RenderWindow Video::window;
 int Video::m_bgScrollSpeeds[BG_LAYER_NUM];
@@ -18,29 +21,12 @@ int Video::m_bgScrollSpeeds[BG_LAYER_NUM];
 ///////////////////////////////////////////////////////////////////
 // ShaderScripts.
 ///////////////////////////////////////////////////////////////////
-std::string Video::m_pixelShaderScripts[PIXEL_SHADER_NUM];
 std::string Video::m_vertexShaderScripts[VERTEX_SHADER_NUM];
-
+ShaderScript* Video::m_pixelShaderScripts[PIXEL_SHADER_NUM];
 
 void Video::setupPixelShaderScripts() {
-	m_pixelShaderScripts[Video::PS_RASTER] = \
-    "uniform sampler2D texture; \
-	uniform float wave_phase; \
-	uniform float pixel_threshold; \
-\
-	void main() \
-	{ \
-		vec2 pos; \
-		pos.x = gl_TexCoord[0].x; \
-		pos.y = gl_TexCoord[0].y; \
-	    float factor = 1.0 / (pixel_threshold + 0.001); \
-		pos.x = floor(pos.x * factor + 0.5) / factor; \
-		pos.y = floor(pos.y * factor + 0.5) / factor; \
-\
-		pos.x = mod(1.0f + pos.x + 0.05f*sin(pos.y * 30.0f + wave_phase * 0.95f), 1.0f); \
-\
-		gl_FragColor = texture2D(texture, pos) * gl_Color; \
-	}";
+	m_pixelShaderScripts[Video::PS_RASTER] 	= new PS_Wave();
+	m_pixelShaderScripts[Video::PS_PIXELIZE] 	= new PS_Pixel();
 }
 
 
@@ -57,14 +43,16 @@ void Video::initialize(int w, int h) {
     for(int ii=0;ii<BG_LAYER_NUM;ii++) {
     	m_scrollDirections[ii] = DIRECTION_NONE;
     	m_bgScrollSpeeds[ii]   = 0;
+    	m_bgShader[ii] = new Shader();
     }
+
+    for(int ii=0;ii<SPRITE_LAYER_NUM;ii++) {
+    	m_spriteShader[ii] = new Shader();
+    	m_spriteLayers[ii].create(w, h);
+    }
+
     //Shader scripts setup
     Video::setupPixelShaderScripts();
-
-    // m_bgShader[0].loadFromFile("shader/pixelate.frag", sf::Shader::Fragment);
-    // m_bgShader[0].loadFromFile("shader/wave.vert", sf::Shader::Vertex);
-    // m_bgShader[0].loadFromFile("shader/wave.vert", "shader/pixelate.frag");
-    m_bgShader[1].loadFromMemory(m_pixelShaderScripts[Video::PS_RASTER], sf::Shader::Fragment);
 }
 
 /**
@@ -207,17 +195,9 @@ void Video::drawBg(sf::RenderWindow &window) {
 	for(int layer=0;layer<BG_LAYER_NUM;layer++) {
 		sf::Sprite sprite(Video::m_bgLayers[layer].getTexture());
 		sprite.setPosition((float)m_bgPositions[layer].x, (float)m_bgPositions[layer].y);
-		//fragment
-		m_bgShader[layer].setParameter("texture", sf::Shader::CurrentTexture);
-		m_bgShader[layer].setParameter("wave_phase", m_clock.getElapsedTime().asSeconds());
-
-		m_bgShader[layer].setParameter("pixel_threshold", 0.003);
-		//vertex
-        m_bgShader[layer].setParameter("wave_amplitude", 1 * 200, 0 * 40);
-        m_bgShader[layer].setParameter("wave_height", (float)m_bgLayers[layer].getTexture().getSize().y);
-
-
-	    window.draw(sprite, &m_bgShader[layer]);
+		//shader
+		m_bgShader[layer]->buildShader();
+	    window.draw(sprite, &m_bgShader[layer]->m_shader);
 	}
 }
 
@@ -226,4 +206,40 @@ void Video::drawBg(sf::RenderWindow &window) {
  */
 void Video::clearBg(BgLayer layer) {
 	m_bgLayers[layer].clear();
+}
+
+void Video::clearSpriteAll() {
+	for(int layer=0;layer<SPRITE_LAYER_NUM;layer++) {
+		m_spriteLayers[layer].clear(sf::Color::Transparent);
+	}
+}
+
+/**
+ * 背景用Shader設定.
+ */
+void Video::addBgPixelShader(BgLayer layer, PixelShader shaderType) {
+	m_bgShader[layer]->addShaderScript(m_pixelShaderScripts[shaderType]);
+}
+
+/**
+ * スプライト用Shader設定.
+ */
+void Video::addSpritePixelShader(SpriteLayer layer, PixelShader shaderType) {
+	m_spriteShader[layer]->addShaderScript(m_pixelShaderScripts[shaderType]);
+}
+
+
+/**
+ * スプライト描画.
+ */
+void Video::drawSprite(SpriteLayer layer, sf::RenderWindow &window, sf::Sprite &sprite) {
+	m_spriteLayers[layer].draw(sprite);
+}
+
+void Video::flipSpriteToWindow(sf::RenderWindow &window) {
+	for(int layer=0;layer<SPRITE_LAYER_NUM;layer++) {
+		sf::Sprite sprite(Video::m_spriteLayers[layer].getTexture());
+		m_spriteShader[layer]->buildShader();
+		window.draw(sprite);
+	}
 }
