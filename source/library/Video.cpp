@@ -240,6 +240,6 @@ void Video::flipSpriteToWindow(sf::RenderWindow &window) {
 	for(int layer=0;layer<SPRITE_LAYER_NUM;layer++) {
 		sf::Sprite sprite(Video::m_spriteLayers[layer].getTexture());
 		m_spriteShader[layer]->buildShader();
-		window.draw(sprite);
+		window.draw(sprite, &m_spriteShader[layer]->m_shader);
 	}
 }

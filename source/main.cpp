@@ -40,6 +40,8 @@ public:
 
 void TestScene::setup() {
 	Scene::setup();
+	//Video::addSpritePixelShader(Video::SP_1, Video::PS_PIXELIZE);
+	Video::addSpritePixelShader(Video::SP_1, Video::PS_RASTER);
 
 	//Video::tiledBgFromFile(Video::BG_2, "dirt2q.jpg");
 	Video::bgFromFile(Video::BG_2, "flame.png", -240, -140);
