@@ -19,7 +19,7 @@ public:
 
 	Mover();
 	void setTexture(std::string texture_filename);
-	void draw(sf::RenderWindow &window);
+	void draw();
 	void update();
 };
 

@@ -5,10 +5,13 @@
 #include "library/Shader/Shader.h"
 #include "library/Shader/ShaderScript.h"
 
-const int BG_LAYER_NUM = 3;
-const int SPRITE_LAYER_NUM = 2;
+const int BG_LAYER_NUM = 2;
+const int SPRITE_LAYER_NUM = 1;
 const int PIXEL_SHADER_NUM = 3;
 const int VERTEX_SHADER_NUM = 3;
+const int FONT_TYPE_NUM = 1;
+const int DEFAULT_FONT_SIZE = 12;
+
 /***************************************************************************************
  * Video Class.
  ***************************************************************************************/
@@ -48,6 +51,9 @@ public:
 		BG_TILED_VERTICAL = 1,
 		BG_TILED_HORIZONTAL = 2,
 	};
+	enum FontType {
+		FONT_NORMAL = 0
+	};
 
 /**
  * private members.
@@ -65,12 +71,20 @@ private:
 	static Shader* m_spriteShader[SPRITE_LAYER_NUM];
 	static ShaderScript* m_pixelShaderScripts[PIXEL_SHADER_NUM];
 	static std::string m_vertexShaderScripts[VERTEX_SHADER_NUM];
+	static sf::Font m_fonts[FONT_TYPE_NUM];
+	//////////////////
+	// Layer Sprite 
+	//////////////////
+	static sf::Sprite m_spSprites[SPRITE_LAYER_NUM];
+	static sf::Sprite m_bgSprites[BG_LAYER_NUM];
+
 
 /**
  * public member.
  */
 public:
 	static void setupPixelShaderScripts();
+	static void setupFonts();
 	static void initialize(int, int);
 	static void toggleFullScreen();
 	static void tiledBgFromFile(BgLayer layer, std::string image_filename);
@@ -78,6 +92,8 @@ public:
 	static void bgFromFile(BgLayer layer, std::string image_filename);
 	static void bgFromFile(BgLayer layer, std::string image_filename, int x, int y);
 
+	static void drawText(std::string str, Video::FontType fontType, int x, int y);
+	static void drawText(std::string str, Video::FontType fontType, int x, int y, int size);
 	static void drawBg(sf::RenderWindow &window);
 	static void clearBg(BgLayer layer);
 	static void clearSpriteAll();
@@ -86,7 +102,7 @@ public:
 	static void setBgScrollSpeed(BgLayer layer, int speed);
 	static void addBgPixelShader(BgLayer layer, PixelShader shaderType);
 	static void addSpritePixelShader(SpriteLayer layer, PixelShader shaderType);
-	static void drawSprite(SpriteLayer layer, sf::RenderWindow &window, sf::Sprite &sprite);
+	static void drawSprite(SpriteLayer layer, sf::Drawable &sprite);
 	static void flipSpriteToWindow(sf::RenderWindow &window);
 	static sf::RenderWindow window;
 	static sf::Clock videoClock;

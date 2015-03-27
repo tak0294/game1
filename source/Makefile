@@ -1,6 +1,6 @@
 COMPILER = g++
 CFLAGS   = -Wextra -g -MMD -MP
-LDFLAGS  = -lsfml-graphics -lsfml-window -lsfml-system -std=c++0x -static-libstdc++ -static-libgcc
+LDFLAGS  = -static -lsfml-graphics -lsfml-window -lsfml-system -std=c++0x -static-libstdc++ -static-libgcc
 LIBS     =
 INCLUDE  = -I../include
 TARGET   = ../bin/$(shell basename `readlink -f ..`)

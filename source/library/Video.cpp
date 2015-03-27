@@ -18,6 +18,19 @@ sf::Clock Video::videoClock;
 sf::RenderWindow Video::window;
 int Video::m_bgScrollSpeeds[BG_LAYER_NUM];
 
+
+///////////////////////////////////////////////////////////////////
+//	Layer Sprites
+///////////////////////////////////////////////////////////////////
+sf::Sprite Video::m_spSprites[SPRITE_LAYER_NUM];
+sf::Sprite Video::m_bgSprites[BG_LAYER_NUM];
+
+
+///////////////////////////////////////////////////////////////////
+// FontTypes.
+///////////////////////////////////////////////////////////////////
+sf::Font Video::m_fonts[FONT_TYPE_NUM];
+
 ///////////////////////////////////////////////////////////////////
 // ShaderScripts.
 ///////////////////////////////////////////////////////////////////
@@ -29,6 +42,9 @@ void Video::setupPixelShaderScripts() {
 	m_pixelShaderScripts[Video::PS_PIXELIZE] 	= new PS_Pixel();
 }
 
+void Video::setupFonts() {
+	m_fonts[FONT_NORMAL].loadFromFile("yutapon.ttf");
+}
 
 /**
  *	SDL初期化.
@@ -36,8 +52,9 @@ void Video::setupPixelShaderScripts() {
 void Video::initialize(int w, int h) {
 	m_width = w;
 	m_height = h;
+    //window.create(sf::VideoMode(w, h), "SFML works!!!", sf::Style::Fullscreen);
     window.create(sf::VideoMode(w, h), "SFML works!!!");
-    window.setVerticalSyncEnabled(true);
+    window.setVerticalSyncEnabled(false);
     window.setFramerateLimit(60);
 
     for(int ii=0;ii<BG_LAYER_NUM;ii++) {
@@ -49,10 +66,14 @@ void Video::initialize(int w, int h) {
     for(int ii=0;ii<SPRITE_LAYER_NUM;ii++) {
     	m_spriteShader[ii] = new Shader();
     	m_spriteLayers[ii].create(w, h);
-    }
+    	m_spriteLayers[ii].display();
+	}
 
     //Shader scripts setup
     Video::setupPixelShaderScripts();
+
+    //Font setup.
+    Video::setupFonts();
 }
 
 /**
@@ -193,11 +214,11 @@ void Video::scrollBg() {
  */
 void Video::drawBg(sf::RenderWindow &window) {
 	for(int layer=0;layer<BG_LAYER_NUM;layer++) {
-		sf::Sprite sprite(Video::m_bgLayers[layer].getTexture());
-		sprite.setPosition((float)m_bgPositions[layer].x, (float)m_bgPositions[layer].y);
+		m_bgSprites[layer].setTexture(m_bgLayers[layer].getTexture());
+		m_bgSprites[layer].setPosition((float)m_bgPositions[layer].x, (float)m_bgPositions[layer].y);
 		//shader
 		m_bgShader[layer]->buildShader();
-	    window.draw(sprite, &m_bgShader[layer]->m_shader);
+	    window.draw(m_bgSprites[layer], &m_bgShader[layer]->m_shader);
 	}
 }
 
@@ -232,14 +253,38 @@ void Video::addSpritePixelShader(SpriteLayer layer, PixelShader shaderType) {
 /**
  * スプライト描画.
  */
-void Video::drawSprite(SpriteLayer layer, sf::RenderWindow &window, sf::Sprite &sprite) {
+void Video::drawSprite(SpriteLayer layer, sf::Drawable &sprite) {
 	m_spriteLayers[layer].draw(sprite);
 }
 
 void Video::flipSpriteToWindow(sf::RenderWindow &window) {
 	for(int layer=0;layer<SPRITE_LAYER_NUM;layer++) {
-		sf::Sprite sprite(Video::m_spriteLayers[layer].getTexture());
+		m_spSprites[layer].setTexture(m_spriteLayers[layer].getTexture());
 		m_spriteShader[layer]->buildShader();
-		window.draw(sprite, &m_spriteShader[layer]->m_shader);
+		window.draw(m_spSprites[layer], &m_spriteShader[layer]->m_shader);
 	}
 }
+
+/**
+ * テキスト描画.
+ */
+void Video::drawText(std::string str, Video::FontType fontType, int x, int y) {
+	Video::drawText(str, fontType, x, y, DEFAULT_FONT_SIZE);
+}
+
+void Video::drawText(std::string str, Video::FontType fontType, int x, int y, int size) {
+	sf::Text text(str, m_fonts[fontType], size);
+	text.setPosition(x, y);
+	// window.draw(text);
+	// m_bgLayers[BG_2].draw(text);
+	m_spriteLayers[SP_1].draw(text);
+}
+
+
+
+
+
+
+
+
+

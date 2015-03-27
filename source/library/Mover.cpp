@@ -15,12 +15,12 @@ void Mover::setTexture(std::string texture_filename) {
 	this->m_sprite.setTexture(this->m_texture);
 }
 
-void Mover::draw(sf::RenderWindow &window) {
+void Mover::draw() {
 	this->m_sprite.setPosition(this->pos.x, this->pos.y);
 	this->m_sprite.setOrigin(m_textureSize.x/2, m_textureSize.y/2);
 	this->m_sprite.setRotation(this->rotation);
 	this->m_sprite.setScale(this->scale.x, this->scale.y);
-	Video::drawSprite(drawLayer, window, m_sprite);
+	Video::drawSprite(drawLayer, m_sprite);
 	//window.draw(this->m_sprite);
 }
 
